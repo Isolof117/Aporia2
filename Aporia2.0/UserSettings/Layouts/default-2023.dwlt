@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Inspector
+  m_Title: Scene
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -742,7 +742,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.024305016, y: -0.013499997, z: 0.00032819217, w: 0.9996159}
     speed: 2
-    m_Value: {x: -0.024305016, y: 0.013499997, z: -0.00032819214, w: -0.9996159}
+    m_Value: {x: 0.024304954, y: -0.013499963, z: 0.00032819135, w: 0.9996134}
   m_Size:
     m_Target: 11.411661
     speed: 2
@@ -819,7 +819,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: ecfaffff
+      m_ExpandedIDs: 78ebffff38ecffff76eeffff7eeeffff86eeffff8eeeffff96eeffffb2eeffff86f4ffffecfaffff92a10000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1180,7 +1180,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 669
+  m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
