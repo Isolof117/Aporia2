@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ElmanGameDevTools.PlayerSystem
 {
@@ -13,6 +14,7 @@ namespace ElmanGameDevTools.PlayerSystem
         [Header("REFERENCES")]
         [Tooltip("The CharacterController component used for physics-based movement.")]
         public CharacterController controller;
+        public Health playerHealth;
         [Tooltip("The Transform of the camera, usually a child of the player object.")]
         public Transform playerCamera;
 
@@ -91,6 +93,16 @@ namespace ElmanGameDevTools.PlayerSystem
         public bool IsGrounded => _isGrounded;
         public bool IsCrouching => _isCrouching;
         public MovementState CurrentState => _currentMovementState;
+
+        private void OnEnable()
+        {
+            playerHealth.OnDeath += HandlePlayerDeath;
+        }
+
+        private void OnDisable()
+        {
+            playerHealth.OnDeath -= HandlePlayerDeath;
+        }
 
         private void Start()
         {
@@ -295,5 +307,13 @@ namespace ElmanGameDevTools.PlayerSystem
                 Gizmos.DrawWireSphere(standingHeightMarker.transform.position, standingCheckRadius);
             }
         }
+
+        void HandlePlayerDeath()
+        {
+            //Do player Death stuff here - This stuff is temporary
+
+            SceneManager.LoadScene(6);
+        }
+
     }
 }

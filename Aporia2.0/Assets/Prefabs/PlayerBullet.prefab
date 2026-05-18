@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7506742447701745825}
   - component: {fileID: -1896811267416525294}
   - component: {fileID: 3747096368760314284}
-  - component: {fileID: -7630870483854221778}
+  - component: {fileID: 8959410811874174006}
   m_Layer: 0
   m_Name: PlayerBullet
   m_TagString: PlayerBullet
@@ -245,7 +245,7 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &-7630870483854221778
+--- !u!114 &8959410811874174006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3459593287664729163}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bde3f49870609340a02e50e9ab6d850, type: 3}
+  m_Script: {fileID: 11500000, guid: f8574143cc952cb49a4b553df3bcab41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10

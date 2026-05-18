@@ -12,8 +12,6 @@ public class Health : MonoBehaviour
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Canvas canvas;
 
-    [SerializeField] private Transform cameraPosition;
-
     //Events
 
     public event Action OnDeath;
@@ -34,11 +32,6 @@ public class Health : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
-    {
-       canvas.transform.LookAt(cameraPosition);
-    }
-
     public void TakeDamage(int damage)
     {
         Debug.Log($"Before Damage: {currentHealth}");
@@ -53,7 +46,6 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Debug.Log("Enemy died");
             OnDeath?.Invoke();
         }
     }
