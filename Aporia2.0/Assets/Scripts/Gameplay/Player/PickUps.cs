@@ -1,15 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PickUps : MonoBehaviour
 {
     // Weapon data from enemy
-    private WeaponData data;
+    public WeaponData data;
+    private Loadout PlayerLoadout;
+    private Material PickupColour;
 
     private void Awake()
     {
+        PickupColour = this.gameObject.GetComponent<Material>();
+
         data = GetComponent<WeaponData>();
+
+        SelectPickupType();
 
         if (data == null)
         {
@@ -17,6 +28,22 @@ public class PickUps : MonoBehaviour
         }
     }
 
+    private void SelectPickupType()
+    {
+        int choice = Random.Range(0, 2);
+        switch (choice)
+        {
+            case 0:
+                this.gameObject.tag = "HealthPickup";
+                PickupColour.SetColor("_Color", Color.green);
+                break;
+                
+            case 1:
+                this.gameObject.tag = "WeaponPickup";
+                PickupColour.SetColor("_Color", Color.gray);
+                break;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -27,28 +54,61 @@ public class PickUps : MonoBehaviour
         Debug.Log("Player collided with pickup!");
 
         // Get the current weapon base from the pickup
-
-        WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
-
-        if (currentWeapon == null)
+        if (this.gameObject.CompareTag("HealthPickup"))
         {
-            Debug.LogError("Could not find player's WeaponBase!");
-            return;
+            // Add health pickup
+            Health objectHealth = other.GetComponentInChildren<Health>();
+
+            if (objectHealth == null)
+            {
+                Debug.LogError("Could not find player's health!");
+                return;
+            }
+
+            Debug.Log("Player health obtained");
+
+            objectHealth.TakeDamage(-30);
         }
 
-        Debug.Log("Player weapon obtained!");
-
-        // Get the weapon data from the enemy and apply it to the player's current weapon
-        if (data != null)
+        if (this.gameObject.CompareTag("WeaponPickup"))
         {
-            currentWeapon.CancelQTE();
-            data.SetData(currentWeapon);
-            Debug.Log("Weapon data applied to player's current weapon");
-            //currentWeapon.Reload();
-        }
+            WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
 
-        currentWeapon.CancelQTE();
-        //Destroy
-        Destroy(gameObject);
+            if (currentWeapon == null)
+            {
+                Debug.LogError("Could not find player's WeaponBase!");
+                return;
+            }
+
+            Loadout playerLoadout = other.GetComponent<Loadout>();
+
+            if (playerLoadout == null)
+            {
+                Debug.LogError("Could not find player's Loadout!");
+                return;
+            }
+
+            Debug.Log("Player weapon obtained!");
+
+            // If secondary empty -> fill it
+            if (playerLoadout.SecondaryWeaponData == null)
+            {
+                playerLoadout.SecondaryWeaponData = data;
+                Debug.Log("Stored weapon in secondary slot");
+            }
+            else
+            {
+                // overwrite primary
+                playerLoadout.PrimaryWeaponData = data;
+
+                // immediately equip
+                data.SetData(currentWeapon);
+
+                Debug.Log("Overwrote primary weapon");
+            }
+
+            //Destroy
+            Destroy(gameObject);
+        }
     }
 }
