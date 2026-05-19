@@ -7,6 +7,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class EnemySentry : MonoBehaviour
 {
+    public static System.Action<EnemySentry> OnSentryDeactivated;
+
 
     [Header("Materials")]
 
@@ -74,7 +76,7 @@ public class EnemySentry : MonoBehaviour
         ATTACKING
     };
 
-    private SentryState state = SentryState.SCANNING;
+    public SentryState state;
 
     private Quaternion startingRot;
 
@@ -93,6 +95,8 @@ public class EnemySentry : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         startingRot = cameraHead.transform.localRotation;
+
+        
     }
 
     private void OnEnable()
@@ -104,6 +108,17 @@ public class EnemySentry : MonoBehaviour
     {
         healthScript.OnDeath -= Deactivate;
     }
+
+    private void Start()
+    {
+        state = SentryState.DEACTIVATED;
+
+        cameraHead.transform.localRotation = startingRot * Quaternion.Euler(deactivatedX, 0f, 0f);
+
+        headRend.material = offMat;
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -230,13 +245,15 @@ public class EnemySentry : MonoBehaviour
 
     }
 
-    void Deactivate()
+    public void Deactivate()
     {
         state = SentryState.DEACTIVATED;
         sentryCanvas.enabled = false;
 
         audioSource.pitch = 0.5f;
         audioSource.PlayOneShot(deactivateSound);
+
+        OnSentryDeactivated?.Invoke(this); //notify wave controller that sentry has been deactivated
 
         StartCoroutine(DeactivationAnim());
     }
@@ -264,7 +281,7 @@ public class EnemySentry : MonoBehaviour
         }
     }
 
-    void Activate()
+    public void Activate()
     {
         sentryCanvas.enabled = true;
 
