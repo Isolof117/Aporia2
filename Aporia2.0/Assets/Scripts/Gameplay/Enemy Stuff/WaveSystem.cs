@@ -1,8 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class WaveSystem : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] private float doorMoveSpeed = 2f;
 
     [Header("Enemy Setup")]
-    [SerializeField] private GameObject enemyTemplate; // your single "master enemy"
+    [SerializeField] private GameObject enemyTemplate;
     [SerializeField] private float spawnOffsetBehindDoor = 2f;
 
     [Header("NavMesh")]
@@ -23,113 +23,342 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI waveText;
     [SerializeField] private float textFadeDuration = 1f;
 
+    private int currentWave = 1;
+
+    // Tracks spawned enemy HOLDERS
+    private readonly List<GameObject> spawnedEnemies =
+        new List<GameObject>();
+
+    // Stores currently opened doors
+    private int[] currentOpenDoors;
+
+    // Original closed positions
+    private Vector3[] closedDoorPositions;
+
+    private bool waveActive = false;
+    private bool startingNextWave = false;
+
     private void Start()
     {
         if (waveText != null)
         {
             waveText.alpha = 0f;
-            waveText.text = "WAVE ONE";
         }
 
-        StartCoroutine(StartWaveIntro());
+        // Save original door positions
+        closedDoorPositions =
+            new Vector3[doors.Length];
+
+        for (int i = 0; i < doors.Length; i++)
+        {
+            if (doors[i] != null)
+            {
+                closedDoorPositions[i] =
+                    doors[i].position;
+            }
+        }
+
+        // Start Wave 1
+        StartCoroutine(BeginWave(1, 2));
     }
 
-    private IEnumerator StartWaveIntro()
+    private void Update()
     {
-        // Wait 5 seconds after scene load
+        // Remove entries whose Enemy-tagged child is gone
+        spawnedEnemies.RemoveAll(enemy =>
+        {
+            if (enemy == null)
+                return true;
+
+            Transform[] children =
+                enemy.GetComponentsInChildren<Transform>();
+
+            foreach (Transform child in children)
+            {
+                if (child.CompareTag("Enemy"))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        // No checks if wave inactive
+        if (!waveActive)
+            return;
+
+        // Start next wave when all enemies dead
+        if (spawnedEnemies.Count == 0 &&
+            !startingNextWave)
+        {
+            waveActive = false;
+            startingNextWave = true;
+
+            StartCoroutine(StartNextWave());
+        }
+    }
+
+    private IEnumerator StartNextWave()
+    {
+        // CLOSE current doors first
+        if (currentOpenDoors != null)
+        {
+            yield return StartCoroutine(
+                MoveDoorsDown(currentOpenDoors)
+            );
+
+            // Rebuild NavMesh after closing
+            if (navMeshSurface != null)
+            {
+                navMeshSurface.BuildNavMesh();
+            }
+        }
+
+        yield return new WaitForSeconds(3f);
+
+        currentWave++;
+
+        // Increase doors each wave
+        int doorCount =
+            Mathf.Clamp(currentWave + 1, 2, doors.Length);
+
+        yield return StartCoroutine(
+            BeginWave(currentWave, doorCount)
+        );
+
+        startingNextWave = false;
+    }
+
+    private IEnumerator BeginWave(
+        int waveNumber,
+        int doorCount)
+    {
+        // Set wave text
+        if (waveText != null)
+        {
+            switch (waveNumber)
+            {
+                case 1:
+                    waveText.text = "WAVE ONE";
+                    break;
+
+                case 2:
+                    waveText.text = "WAVE TWO";
+                    break;
+
+                case 3:
+                    waveText.text = "WAVE THREE";
+                    break;
+
+                case 4:
+                    waveText.text = "WAVE FOUR";
+                    break;
+
+                case 5:
+                    waveText.text = "WAVE FIVE";
+                    break;
+
+                default:
+                    waveText.text =
+                        "WAVE " + waveNumber;
+                    break;
+            }
+        }
+
+        // Delay before starting
         yield return new WaitForSeconds(5f);
 
-        // Pick 2 random doors
-        int[] selectedDoors = GetTwoRandomDoors();
+        // Pick unique random doors
+        int[] selectedDoors =
+            GetUniqueRandomDoors(doorCount);
 
-        //  Spawn enemies FIRST (before doors open)
+        // Store open doors
+        currentOpenDoors = selectedDoors;
+
+        // Spawn enemies
         SpawnEnemies(selectedDoors);
 
-        // Move doors
-        yield return StartCoroutine(MoveDoorsUp(selectedDoors));
+        // Wave now active
+        waveActive = true;
 
-        // Rebuild navmesh AFTER doors move
+        // Open selected doors
+        yield return StartCoroutine(
+            MoveDoorsUp(selectedDoors)
+        );
+
+        // Update NavMesh
         if (navMeshSurface != null)
+        {
             navMeshSurface.BuildNavMesh();
+        }
 
-        // UI
+        // Show UI text
         StartCoroutine(ShowWaveText());
     }
 
     private void SpawnEnemies(int[] activeDoors)
     {
-        if (enemyTemplate == null || doors == null) return;
+        if (enemyTemplate == null || doors == null)
+            return;
 
         foreach (int i in activeDoors)
         {
-            if (i < 0 || i >= doors.Length) continue;
-            if (doors[i] == null) continue;
+            if (i < 0 || i >= doors.Length)
+                continue;
+
+            if (doors[i] == null)
+                continue;
 
             Transform door = doors[i];
 
-            // Spawn position: behind door
-            Vector3 spawnPos = door.position - door.forward * spawnOffsetBehindDoor;
+            Vector3 spawnPos =
+                door.position -
+                door.forward * spawnOffsetBehindDoor;
 
-            // Copy enemy
-            Instantiate(enemyTemplate, spawnPos, door.rotation);
+            GameObject clone = Instantiate(
+                enemyTemplate,
+                spawnPos,
+                door.rotation
+            );
+
+            spawnedEnemies.Add(clone);
         }
     }
 
-    private int[] GetTwoRandomDoors()
+    private int[] GetUniqueRandomDoors(int amount)
     {
-        if (doors == null || doors.Length < 2)
-            return new int[] { 0, 1 };
+        amount =
+            Mathf.Clamp(amount, 1, doors.Length);
 
-        int first = Random.Range(0, doors.Length);
+        List<int> available =
+            new List<int>();
 
-        int second;
-        do
+        for (int i = 0; i < doors.Length; i++)
         {
-            second = Random.Range(0, doors.Length);
+            available.Add(i);
         }
-        while (second == first);
 
-        return new int[] { first, second };
+        int[] selected = new int[amount];
+
+        for (int i = 0; i < amount; i++)
+        {
+            int randomIndex =
+                Random.Range(0, available.Count);
+
+            selected[i] =
+                available[randomIndex];
+
+            // Prevent duplicates
+            available.RemoveAt(randomIndex);
+        }
+
+        return selected;
     }
 
     private IEnumerator MoveDoorsUp(int[] activeDoors)
     {
-        Vector3[] startPositions = new Vector3[doors.Length];
-        Vector3[] targetPositions = new Vector3[doors.Length];
-        bool[] shouldMove = new bool[doors.Length];
+        float t = 0f;
 
-        foreach (int i in activeDoors)
-        {
-            if (i >= 0 && i < doors.Length)
-                shouldMove[i] = true;
-        }
+        Vector3[] startPositions =
+            new Vector3[doors.Length];
+
+        Vector3[] targetPositions =
+            new Vector3[doors.Length];
 
         for (int i = 0; i < doors.Length; i++)
         {
-            if (doors[i] == null) continue;
+            if (doors[i] == null)
+                continue;
 
-            startPositions[i] = doors[i].position;
+            startPositions[i] =
+                doors[i].position;
 
-            targetPositions[i] = shouldMove[i]
-                ? doors[i].position + Vector3.up * doorMoveAmount
-                : doors[i].position;
+            targetPositions[i] =
+                doors[i].position;
         }
 
-        float t = 0f;
+        foreach (int i in activeDoors)
+        {
+            if (i < 0 || i >= doors.Length)
+                continue;
+
+            targetPositions[i] =
+                closedDoorPositions[i] +
+                Vector3.up * doorMoveAmount;
+        }
 
         while (t < 1f)
         {
-            t += Time.deltaTime * doorMoveSpeed;
+            t +=
+                Time.deltaTime *
+                doorMoveSpeed;
 
             for (int i = 0; i < doors.Length; i++)
             {
-                if (doors[i] == null) continue;
+                if (doors[i] == null)
+                    continue;
 
-                doors[i].position = Vector3.Lerp(
-                    startPositions[i],
-                    targetPositions[i],
-                    t
-                );
+                doors[i].position =
+                    Vector3.Lerp(
+                        startPositions[i],
+                        targetPositions[i],
+                        t
+                    );
+            }
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator MoveDoorsDown(int[] activeDoors)
+    {
+        float t = 0f;
+
+        Vector3[] startPositions =
+            new Vector3[doors.Length];
+
+        Vector3[] targetPositions =
+            new Vector3[doors.Length];
+
+        for (int i = 0; i < doors.Length; i++)
+        {
+            if (doors[i] == null)
+                continue;
+
+            startPositions[i] =
+                doors[i].position;
+
+            targetPositions[i] =
+                doors[i].position;
+        }
+
+        foreach (int i in activeDoors)
+        {
+            if (i < 0 || i >= doors.Length)
+                continue;
+
+            targetPositions[i] =
+                closedDoorPositions[i];
+        }
+
+        while (t < 1f)
+        {
+            t +=
+                Time.deltaTime *
+                doorMoveSpeed;
+
+            for (int i = 0; i < doors.Length; i++)
+            {
+                if (doors[i] == null)
+                    continue;
+
+                doors[i].position =
+                    Vector3.Lerp(
+                        startPositions[i],
+                        targetPositions[i],
+                        t
+                    );
             }
 
             yield return null;
@@ -138,14 +367,23 @@ public class WaveSystem : MonoBehaviour
 
     private IEnumerator ShowWaveText()
     {
-        if (waveText == null) yield break;
+        if (waveText == null)
+            yield break;
 
         float t = 0f;
 
+        // Fade in
         while (t < textFadeDuration)
         {
             t += Time.deltaTime;
-            waveText.alpha = Mathf.Lerp(0f, 1f, t / textFadeDuration);
+
+            waveText.alpha =
+                Mathf.Lerp(
+                    0f,
+                    1f,
+                    t / textFadeDuration
+                );
+
             yield return null;
         }
 
@@ -155,10 +393,18 @@ public class WaveSystem : MonoBehaviour
 
         t = 0f;
 
+        // Fade out
         while (t < textFadeDuration)
         {
             t += Time.deltaTime;
-            waveText.alpha = Mathf.Lerp(1f, 0f, t / textFadeDuration);
+
+            waveText.alpha =
+                Mathf.Lerp(
+                    1f,
+                    0f,
+                    t / textFadeDuration
+                );
+
             yield return null;
         }
 
