@@ -12,6 +12,7 @@ public class WeaponBase : MonoBehaviour
 
     [Header("Assets")]
     public Camera Camera;
+    public GameObject[] gunModels;
     public GameObject bulletPrefab;
     public Transform firePoint;
     public GameObject MovingBoxCanvas;
