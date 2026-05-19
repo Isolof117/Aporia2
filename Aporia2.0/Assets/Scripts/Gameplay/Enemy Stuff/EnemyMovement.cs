@@ -305,6 +305,7 @@ public class EnemyMovement : MonoBehaviour
 
     void DetermineEnemyType()
     {
+        
         switch (enemyType)
         {
             case EnemyType.Heavy:
