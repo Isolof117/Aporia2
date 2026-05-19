@@ -25,6 +25,10 @@ namespace ElmanGameDevTools.PlayerAudio
         public AudioSource audioSource;
         [Range(0f, 1f)] public float volume = 0.5f;
 
+        public AudioSource lowHealthSource;
+        public AudioClip lowHealthClip;
+
+
         [Header("PITCH (SPEED)")]
         public float walkPitch = 1.0f;
         public float runPitch = 1.3f;
@@ -33,9 +37,12 @@ namespace ElmanGameDevTools.PlayerAudio
         [Header("REFERENCES")]
         public PlayerController playerController;
 
+        public Health playerHealth;
+
         private float _airTimeThreshold = 0.2f;
         private float _currentAirTime;
 
+        private bool wasLow = false;
         private void Start()
         {
             if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
@@ -61,6 +68,26 @@ namespace ElmanGameDevTools.PlayerAudio
                 PlaySteps();
             else if (audioSource.isPlaying)
                 audioSource.Stop();
+
+            if(playerHealth != null)
+            {
+                bool isLow = playerHealth.GetHealthRatio() < 0.3f;
+
+                if(isLow && !wasLow)
+                {
+                    lowHealthSource.clip = lowHealthClip;
+                    lowHealthSource.loop = true;
+                    lowHealthSource.Play();
+                }
+                else if(!isLow && wasLow)
+                {
+                    lowHealthSource.Stop();
+                }
+
+                wasLow = isLow;
+            }
+
+            
         }
 
         private void PlaySteps()
