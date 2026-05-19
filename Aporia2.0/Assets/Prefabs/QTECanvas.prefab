@@ -236,6 +236,7 @@ MonoBehaviour:
   - 100
   - 75
   - 50
+  ReloadSounds: []
 --- !u!1 &3074468576714410769
 GameObject:
   m_ObjectHideFlags: 0

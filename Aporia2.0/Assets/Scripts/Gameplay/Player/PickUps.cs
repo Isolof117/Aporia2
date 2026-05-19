@@ -14,6 +14,8 @@ public class PickUps : MonoBehaviour
     private Loadout PlayerLoadout;
     private Material PickupColour;
 
+    [SerializeField] private float rotationSpeed;
+
     private void Awake()
     {
         PickupColour = this.gameObject.GetComponent<Material>();
@@ -26,6 +28,11 @@ public class PickUps : MonoBehaviour
         {
             Debug.LogError("No WeaponData found on pickup prefab!");
         }
+    }
+
+    private void Update()
+    {
+        //transform.Rotate(rotationSpeed * Time.deltaTime, rotationSpeed * Time.deltaTime, rotationSpeed * Time.deltaTime);
     }
 
     private void SelectPickupType()

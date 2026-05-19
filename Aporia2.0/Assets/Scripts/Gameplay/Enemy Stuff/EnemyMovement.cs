@@ -410,7 +410,7 @@ public class EnemyMovement : MonoBehaviour
     void HandleEnemyDeath()
     {
         Debug.Log("Enemy Death event called");
-        GameObject deathPickUpInstance = Instantiate(deathPickUp, transform.position + new Vector3(0.0f, 2.0f, 0.0f), transform.rotation);
+        GameObject deathPickUpInstance = Instantiate(deathPickUp, transform.position + new Vector3(0.0f, 0.5f, 0.0f), transform.rotation);
         WeaponData data = deathPickUpInstance.GetComponent<WeaponData>();
 
         if (data != null)

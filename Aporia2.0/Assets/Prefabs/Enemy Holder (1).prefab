@@ -738,6 +738,8 @@ MonoBehaviour:
   searchAngle: 45
   deathPickUp: {fileID: 5754219478811335100, guid: cc25759ab8978b94cbfaa41f31a74d0d,
     type: 3}
+  enemyAudio: {fileID: 0}
+  hitMarkerClip: {fileID: 0}
   isIdle: 0
   Weapon: {fileID: 8914086699480636400}
   enemyAlertBox: {fileID: 6891114186660152691}
@@ -807,7 +809,8 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   healthSlider: {fileID: 2206091867853856641}
-  canvas: {fileID: 4334435823577251800}
+  objectToHide: {fileID: 0}
+  objectToShow: {fileID: 0}
 --- !u!1 &5905237012167729534
 GameObject:
   m_ObjectHideFlags: 0
