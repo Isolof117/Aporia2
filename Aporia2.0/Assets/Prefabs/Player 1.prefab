@@ -559,8 +559,6 @@ MonoBehaviour:
   maxHealth: 0
   currentHealth: 0
   healthSlider: {fileID: 0}
-  damageAudio: {fileID: 0}
-  damageSounds: []
   objectToHide: {fileID: 0}
   objectToShow: {fileID: 0}
 --- !u!114 &373971256236468346
@@ -576,7 +574,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerWeapon: {fileID: 0}
-  WeaponData: {fileID: 0}
+  SecondaryWeaponData: {fileID: 0}
+  PrimaryWeaponData: {fileID: 0}
 --- !u!1 &3456498094874216348
 GameObject:
   m_ObjectHideFlags: 0

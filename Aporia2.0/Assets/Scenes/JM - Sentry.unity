@@ -722,6 +722,8 @@ MonoBehaviour:
   maxHealth: 30
   currentHealth: 30
   healthSlider: {fileID: 78569657}
+  objectToHide: {fileID: 0}
+  objectToShow: {fileID: 0}
 --- !u!114 &1126493243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,6 +757,7 @@ MonoBehaviour:
   deactivateSound: {fileID: 8300000, guid: 0e127485b55bf05448da6da29e4ff6fe, type: 3}
   cameraHead: {fileID: 2144222721}
   sentryCanvas: {fileID: 1870165353}
+  state: 0
   playerRef: {fileID: 1109273680}
 --- !u!23 &1126493244
 MeshRenderer:
