@@ -17,12 +17,12 @@ public class Health : MonoBehaviour
     [SerializeField] private GameObject objectToHide;
     [SerializeField] private GameObject objectToShow;
 
-    private bool isDead = false;
+    public bool isDead = false;
 
     public event Action OnDeath;
     public event Action OnDamage;
 
-    private void Start()
+    private void Awake()
     {
         currentHealth = maxHealth;
 

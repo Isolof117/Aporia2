@@ -56,6 +56,7 @@ public class EnemySentry : MonoBehaviour
     [SerializeField] private AudioClip aggroSound;
     [SerializeField] private AudioClip shotSound;
     [SerializeField] private AudioClip deactivateSound;
+    [SerializeField] private AudioClip hitMarkerClip;
 
     [Header("Parameters")]
     [SerializeField] private GameObject cameraHead;
@@ -102,11 +103,16 @@ public class EnemySentry : MonoBehaviour
     private void OnEnable()
     {
         healthScript.OnDeath += Deactivate;
+        healthScript.OnDamage += HandleSentryDamage;
+
+        healthScript.currentHealth = 0;
+        healthScript.isDead = true;
     }
 
     private void OnDisable()
     {
         healthScript.OnDeath -= Deactivate;
+        healthScript.OnDamage -= HandleSentryDamage;
     }
 
     private void Start()
@@ -326,6 +332,13 @@ public class EnemySentry : MonoBehaviour
 
         return angle <= (fovRange * 0.5f);
 
+    }
+
+    void HandleSentryDamage()
+    {
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+
+        audioSource.PlayOneShot(hitMarkerClip);
     }
 
     private void OnDrawGizmosSelected()

@@ -472,6 +472,7 @@ MonoBehaviour:
   aggroSound: {fileID: 8300000, guid: 18d9c9be691d888488a28b0225b2faa6, type: 3}
   shotSound: {fileID: 8300000, guid: df8edd9acd2ec9e43af5d247035e96fa, type: 3}
   deactivateSound: {fileID: 8300000, guid: 0e127485b55bf05448da6da29e4ff6fe, type: 3}
+  hitMarkerClip: {fileID: 8300000, guid: 5d93a8b74ec58fe4d8ea8082c313c5a6, type: 3}
   cameraHead: {fileID: 8814172697503625792}
   sentryCanvas: {fileID: 7539023670980306354}
   state: 1
@@ -491,8 +492,6 @@ MonoBehaviour:
   maxHealth: 30
   currentHealth: 30
   healthSlider: {fileID: 2584057315409530284}
-  damageAudio: {fileID: 0}
-  damageSounds: []
   objectToHide: {fileID: 0}
   objectToShow: {fileID: 0}
 --- !u!82 &1191861076203323061
