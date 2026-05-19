@@ -12,9 +12,6 @@ public class Health : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Slider healthSlider;
 
-    [Header("Damage Audio")]
-    [SerializeField] private AudioSource damageAudio;
-    [SerializeField] private AudioClip[] damageSounds; // 3 clips
 
     [Header("Death Screen")]
     [SerializeField] private GameObject objectToHide;
@@ -23,6 +20,7 @@ public class Health : MonoBehaviour
     private bool isDead = false;
 
     public event Action OnDeath;
+    public event Action OnDamage;
 
     private void Start()
     {
@@ -49,12 +47,7 @@ public class Health : MonoBehaviour
 
         healthSlider.value = currentHealth;
 
-        //  Random damage sound
-        if (damageAudio != null && damageSounds != null && damageSounds.Length > 0)
-        {
-            AudioClip clip = damageSounds[Random.Range(0, damageSounds.Length)];
-            damageAudio.PlayOneShot(clip);
-        }
+        OnDamage?.Invoke();
 
         if (currentHealth <= 0)
         {
@@ -80,5 +73,10 @@ public class Health : MonoBehaviour
         healthSlider.value = currentHealth;
 
         Time.timeScale = 1f;
+    }
+
+    public float GetHealthRatio()
+    {
+        return (float)currentHealth / (float)maxHealth;
     }
 }

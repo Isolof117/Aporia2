@@ -74,6 +74,10 @@ namespace ElmanGameDevTools.PlayerSystem
         public LayerMask groundLayer = 1;
         public float groundCheckDistance = 0.5f;
 
+        [Header("Damage Audio")]
+        [SerializeField] private AudioSource damageAudio;
+        [SerializeField] private AudioClip[] damageSounds; // 3 clips
+
         [Header("Death Screen")]
         [SerializeField] private GameObject objectToHide;
         [SerializeField] private GameObject objectToShow;
@@ -101,11 +105,15 @@ namespace ElmanGameDevTools.PlayerSystem
         private void OnEnable()
         {
             playerHealth.OnDeath += HandlePlayerDeath;
+
+            playerHealth.OnDamage += HandlePlayerDamage;
         }
 
         private void OnDisable()
         {
             playerHealth.OnDeath -= HandlePlayerDeath;
+
+            playerHealth.OnDamage -= HandlePlayerDamage;
         }
 
         private void Start()
@@ -329,6 +337,18 @@ namespace ElmanGameDevTools.PlayerSystem
             // Pause game
             Time.timeScale = 0f;
 
+        }
+
+        void HandlePlayerDamage()
+        {
+            //  Random damage sound
+
+            Debug.Log("Player damage Sound played");
+            int soundID = Random.Range(0, damageSounds.Length);
+
+            AudioClip clip = damageSounds[soundID];
+
+            damageAudio.PlayOneShot(clip);
         }
 
     }
