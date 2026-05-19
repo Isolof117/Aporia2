@@ -124,7 +124,7 @@ public class WeaponBase : MonoBehaviour
         isReloading = true;
         Debug.Log("QTE Shown: " + QTEShown);
 
-        int Choice = Random.Range(1, 1);
+        int Choice = Random.Range(0, 2);
         switch (Choice)
         {
             case 0:

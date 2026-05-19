@@ -8,6 +8,7 @@ public class WaveSystem : MonoBehaviour
 {
     [Header("Doors (assign 7)")]
     [SerializeField] private Transform[] doors;
+    [SerializeField] private EnemySentry[] sentries;
 
     [SerializeField] private float doorMoveAmount = 10f;
     [SerializeField] private float doorMoveSpeed = 2f;
@@ -28,6 +29,9 @@ public class WaveSystem : MonoBehaviour
     // Tracks spawned enemy HOLDERS
     private readonly List<GameObject> spawnedEnemies =
         new List<GameObject>();
+
+    //Track Sentries
+    private int activeSentryCount = 0;
 
     // Stores currently opened doors
     private int[] currentOpenDoors;
@@ -59,9 +63,22 @@ public class WaveSystem : MonoBehaviour
         }
 
         // Start Wave 1
-        StartCoroutine(BeginWave(1, 2));
+        StartCoroutine(BeginWave(1, 2, 0));
     }
 
+    private void OnEnable()
+    {
+        EnemySentry.OnSentryDeactivated += HandleSentryDeactivated;
+    }
+    private void OnDisable()
+    {
+        EnemySentry.OnSentryDeactivated -= HandleSentryDeactivated;
+    }
+
+    private void HandleSentryDeactivated(EnemySentry sentry)
+    {
+        activeSentryCount = Mathf.Max(0, activeSentryCount - 1);
+    }
     private void Update()
     {
         // Remove entries whose Enemy-tagged child is gone
@@ -89,8 +106,7 @@ public class WaveSystem : MonoBehaviour
             return;
 
         // Start next wave when all enemies dead
-        if (spawnedEnemies.Count == 0 &&
-            !startingNextWave)
+        if (spawnedEnemies.Count == 0 && activeSentryCount == 0 && !startingNextWave)
         {
             waveActive = false;
             startingNextWave = true;
@@ -123,8 +139,10 @@ public class WaveSystem : MonoBehaviour
         int doorCount =
             Mathf.Clamp(currentWave + 1, 2, doors.Length);
 
+        int sentryCount = Mathf.Clamp(currentWave - 1, 0, sentries.Length); 
+
         yield return StartCoroutine(
-            BeginWave(currentWave, doorCount)
+            BeginWave(currentWave, doorCount, sentryCount)
         );
 
         startingNextWave = false;
@@ -132,7 +150,7 @@ public class WaveSystem : MonoBehaviour
 
     private IEnumerator BeginWave(
         int waveNumber,
-        int doorCount)
+        int doorCount, int sentryCount)
     {
         // Set wave text
         if (waveText != null)
@@ -179,6 +197,10 @@ public class WaveSystem : MonoBehaviour
         // Spawn enemies
         SpawnEnemies(selectedDoors);
 
+        //Activate any sentries
+
+        ActivateSentries(sentryCount);
+
         // Wave now active
         waveActive = true;
 
@@ -223,6 +245,26 @@ public class WaveSystem : MonoBehaviour
             );
 
             spawnedEnemies.Add(clone);
+        }
+    }
+
+    void ActivateSentries(int amount)
+    {
+        amount = Mathf.Clamp(amount, 0, sentries.Length);
+
+        for(int i = 0; i < amount; i++)
+        {
+            int rand = Random.Range(0, sentries.Length);
+
+            if(sentries[rand].state == EnemySentry.SentryState.DEACTIVATED)
+            {
+                sentries[rand].Activate();
+                activeSentryCount++; 
+            }
+            else
+            {
+                i--;
+            }
         }
     }
 
