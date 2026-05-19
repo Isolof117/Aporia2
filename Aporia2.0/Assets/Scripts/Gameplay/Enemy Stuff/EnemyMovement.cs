@@ -51,13 +51,6 @@ public class EnemyMovement : MonoBehaviour
 
     [SerializeField] private GameObject deathPickUp;
 
-    [Header("Audio")]
-
-    [SerializeField] private AudioSource enemyAudio;
-
-    [SerializeField] private AudioClip hitMarkerClip;
-
-
     [Header("Other")]
 
     [SerializeField] private bool isIdle = false;
@@ -122,7 +115,6 @@ public class EnemyMovement : MonoBehaviour
         //Subscribe to events
 
         healthScript.OnDeath += HandleEnemyDeath;
-        healthScript.OnDamage += HandleEnemyDamage;
     }
 
     // Update is called once per frame
@@ -410,20 +402,13 @@ public class EnemyMovement : MonoBehaviour
     void HandleEnemyDeath()
     {
         Debug.Log("Enemy Death event called");
-        GameObject deathPickUpInstance = Instantiate(deathPickUp, transform.position + new Vector3(0.0f, 0.5f, 0.0f), transform.rotation);
+        GameObject deathPickUpInstance = Instantiate(deathPickUp, transform.position + new Vector3(0.0f, 2.0f, 0.0f), transform.rotation);
         WeaponData data = deathPickUpInstance.GetComponent<WeaponData>();
 
         if (data != null)
             data.GetData(Weapon);
 
         Die();
-    }
-
-    void HandleEnemyDamage()
-    {
-        enemyAudio.pitch = Random.Range(0.8f, 1.2f);
-
-        enemyAudio.PlayOneShot(hitMarkerClip);
     }
 
     void Die()
@@ -484,6 +469,5 @@ public class EnemyMovement : MonoBehaviour
         //Unsubscribe to events
 
         healthScript.OnDeath -= HandleEnemyDeath;
-        healthScript.OnDamage -= HandleEnemyDamage;
     }
 }

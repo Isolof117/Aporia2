@@ -444,7 +444,6 @@ GameObject:
   - component: {fileID: 4650041863646688663}
   - component: {fileID: 5771560714754073056}
   - component: {fileID: 2990743072990133285}
-  - component: {fileID: 373971256236468346}
   m_Layer: 3
   m_Name: Player 1
   m_TagString: Player
@@ -539,8 +538,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  objectToHide: {fileID: 0}
-  objectToShow: {fileID: 0}
   healthScript: {fileID: 0}
   deathCanvas: {fileID: 0}
   weaponScript: {fileID: 0}
@@ -559,23 +556,8 @@ MonoBehaviour:
   maxHealth: 0
   currentHealth: 0
   healthSlider: {fileID: 0}
-  objectToHide: {fileID: 0}
-  objectToShow: {fileID: 0}
---- !u!114 &373971256236468346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2922589086615138151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 191638309979ded4e9544a7826493326, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerWeapon: {fileID: 0}
-  SecondaryWeaponData: {fileID: 0}
-  PrimaryWeaponData: {fileID: 0}
+  canvas: {fileID: 0}
+  cameraPosition: {fileID: 0}
 --- !u!1 &3456498094874216348
 GameObject:
   m_ObjectHideFlags: 0

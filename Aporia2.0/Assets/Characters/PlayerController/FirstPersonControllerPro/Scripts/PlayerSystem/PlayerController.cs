@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace ElmanGameDevTools.PlayerSystem
 {
@@ -14,7 +13,6 @@ namespace ElmanGameDevTools.PlayerSystem
         [Header("REFERENCES")]
         [Tooltip("The CharacterController component used for physics-based movement.")]
         public CharacterController controller;
-        public Health playerHealth;
         [Tooltip("The Transform of the camera, usually a child of the player object.")]
         public Transform playerCamera;
 
@@ -74,14 +72,6 @@ namespace ElmanGameDevTools.PlayerSystem
         public LayerMask groundLayer = 1;
         public float groundCheckDistance = 0.5f;
 
-        [Header("Damage Audio")]
-        [SerializeField] private AudioSource damageAudio;
-        [SerializeField] private AudioClip[] damageSounds; // 3 clips
-
-        [Header("Death Screen")]
-        [SerializeField] private GameObject objectToHide;
-        [SerializeField] private GameObject objectToShow;
-
         private Vector3 _velocity;
         private float _currentTilt;
         private float _timer;
@@ -101,20 +91,6 @@ namespace ElmanGameDevTools.PlayerSystem
         public bool IsGrounded => _isGrounded;
         public bool IsCrouching => _isCrouching;
         public MovementState CurrentState => _currentMovementState;
-
-        private void OnEnable()
-        {
-            playerHealth.OnDeath += HandlePlayerDeath;
-
-            playerHealth.OnDamage += HandlePlayerDamage;
-        }
-
-        private void OnDisable()
-        {
-            playerHealth.OnDeath -= HandlePlayerDeath;
-
-            playerHealth.OnDamage -= HandlePlayerDamage;
-        }
 
         private void Start()
         {
@@ -319,37 +295,5 @@ namespace ElmanGameDevTools.PlayerSystem
                 Gizmos.DrawWireSphere(standingHeightMarker.transform.position, standingCheckRadius);
             }
         }
-
-        void HandlePlayerDeath()
-        {
-            //Do player Death stuff here - This stuff is temporary
-            // Swap UI
-            if (objectToHide != null)
-                objectToHide.SetActive(false);
-
-            if (objectToShow != null)
-                objectToShow.SetActive(true);
-
-            // Cursor unlock
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-
-            // Pause game
-            Time.timeScale = 0f;
-
-        }
-
-        void HandlePlayerDamage()
-        {
-            //  Random damage sound
-
-            Debug.Log("Player damage Sound played");
-            int soundID = Random.Range(0, damageSounds.Length);
-
-            AudioClip clip = damageSounds[soundID];
-
-            damageAudio.PlayOneShot(clip);
-        }
-
     }
 }

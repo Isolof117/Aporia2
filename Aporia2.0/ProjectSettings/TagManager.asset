@@ -3,27 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Weapon
-  - Enemy
-  - EnemyBullet
-  - PlayerBullet
-  - Stone
-  - grass
-  - metal
-  - Interactable
-  - AggroField
-  - HealthPickup
-  - WeaponPickup
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
-  - Enemy
-  - Wall
+  - 
+  - 
   - 
   - 
   - 

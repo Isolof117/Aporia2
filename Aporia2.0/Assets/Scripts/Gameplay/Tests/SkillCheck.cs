@@ -56,12 +56,11 @@ public class SkillCheck : MonoBehaviour
                 {
                     // Implement for reload sound per keycode
 
-                    int soundIndex = currentKey;
-
-                    currentWeapon.ReloadAudio.PlayOneShot(ReloadSounds[soundIndex]);
-
+                    //for (int soundIndex = currentKey; soundIndex < keySequence.Count;  soundIndex++)
+                    //{
+                    //    currentWeapon.ReloadAudio.PlayOneShot(ReloadSounds[soundIndex]);
+                    //}
                     currentKey++;
-
                     if (currentKey >= keySequence.Count)
                     {
                         CompletedQTE();
@@ -117,7 +116,6 @@ public class SkillCheck : MonoBehaviour
         Sequence.gameObject.SetActive(false);
 
         Debug.Log("QTE Failed");
-        currentWeapon.isReloading = false;
     }
 }
 

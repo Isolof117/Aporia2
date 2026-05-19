@@ -21,11 +21,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float groundDistance;
     [SerializeField] private LayerMask groundLayer;
 
-    [Header("Death Screen")]
-    [SerializeField] private GameObject objectToHide;
-    [SerializeField] private GameObject objectToShow;
-
-
 
     private bool isAlive = true;
 
@@ -133,20 +128,6 @@ public class PlayerMovement : MonoBehaviour
         weaponScript.enabled = false;
 
         Cursor.lockState = CursorLockMode.None;
-
-        // Swap UI
-        if (objectToHide != null)
-            objectToHide.SetActive(false);
-
-        if (objectToShow != null)
-            objectToShow.SetActive(true);
-
-        // Cursor unlock
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
-        // Pause game
-        Time.timeScale = 0f;
     }
 
     private void OnDisable()
