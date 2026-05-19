@@ -219,7 +219,7 @@ public class WaveSystem : MonoBehaviour
             GameObject clone = Instantiate(
                 enemyTemplate,
                 spawnPos,
-                door.rotation
+                enemyTemplate.transform.rotation
             );
 
             spawnedEnemies.Add(clone);

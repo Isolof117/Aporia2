@@ -74,6 +74,10 @@ namespace ElmanGameDevTools.PlayerSystem
         public LayerMask groundLayer = 1;
         public float groundCheckDistance = 0.5f;
 
+        [Header("Death Screen")]
+        [SerializeField] private GameObject objectToHide;
+        [SerializeField] private GameObject objectToShow;
+
         private Vector3 _velocity;
         private float _currentTilt;
         private float _timer;
@@ -311,8 +315,20 @@ namespace ElmanGameDevTools.PlayerSystem
         void HandlePlayerDeath()
         {
             //Do player Death stuff here - This stuff is temporary
+            // Swap UI
+            if (objectToHide != null)
+                objectToHide.SetActive(false);
 
-            SceneManager.LoadScene(6);
+            if (objectToShow != null)
+                objectToShow.SetActive(true);
+
+            // Cursor unlock
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            // Pause game
+            Time.timeScale = 0f;
+
         }
 
     }

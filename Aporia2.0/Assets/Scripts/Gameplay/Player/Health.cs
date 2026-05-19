@@ -69,20 +69,6 @@ public class Health : MonoBehaviour
 
         Debug.Log(gameObject.name + " is dead!");
 
-        // Swap UI
-        if (objectToHide != null)
-            objectToHide.SetActive(false);
-
-        if (objectToShow != null)
-            objectToShow.SetActive(true);
-
-        // Cursor unlock
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
-        // Pause game
-        Time.timeScale = 0f;
-
         OnDeath?.Invoke();
     }
 
