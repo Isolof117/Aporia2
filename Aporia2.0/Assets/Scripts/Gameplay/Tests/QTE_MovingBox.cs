@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
+
+
 public class QTE_MovingBox : MonoBehaviour
 {
     private WeaponBase currentWeapon;
@@ -25,6 +27,8 @@ public class QTE_MovingBox : MonoBehaviour
 
     private int widthPointer = 0;
 
+    public AudioClip[] ReloadSounds;
+
     // Update is called once per frame
     void Update()
     {
@@ -39,13 +43,18 @@ public class QTE_MovingBox : MonoBehaviour
         //else
         //{
         if (QTEActive)
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 if (ISOverlappingUI(goalRect, slider.handleRect))
                 {
                     Debug.Log("YOU HIT");
 
                     goalFound = true;
+
+                    int soundIndex = widthPointer;
+
+                    currentWeapon.ReloadAudio.PlayOneShot(ReloadSounds[soundIndex]);
+
                 }
                 else
                 {
@@ -102,7 +111,8 @@ public class QTE_MovingBox : MonoBehaviour
     }
     IEnumerator LerpSlider()
     {
-   
+        //time = 0f;
+
         while (!goalFound)
         {
             time += Time.deltaTime * moveSpeed;

@@ -122,6 +122,7 @@ public class WeaponBase : MonoBehaviour
     void QTESelect()
     {
         QTEShown = true;
+        isReloading = true;
         Debug.Log("QTE Shown: " + QTEShown);
 
         int Choice = Random.Range(0, 2);
@@ -263,7 +264,7 @@ public class WeaponBase : MonoBehaviour
 
         bullet.GetComponent<Rigidbody>().AddForce(shotDirection * bulletVelocity, ForceMode.Impulse);
 
-        Debug.DrawRay(firePoint.position, shotDirection * 10f, Color.red, 1f);
+        // Debug.DrawRay(firePoint.position, shotDirection * 10f, Color.red, 1f);
 
         StartCoroutine(DestroyBullet(bullet, lifeTime));
     }

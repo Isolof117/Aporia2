@@ -1,25 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PickUps : MonoBehaviour
 {
     // Weapon data from enemy
-<<<<<<< Updated upstream
     private WeaponData data;
 
     private void Awake()
     {
-=======
     public WeaponData data;
-    private Renderer PickupColour;
+    private Loadout PlayerLoadout;
+    private Material PickupColour;
+
+    [SerializeField] private float rotationSpeed;
 
     private void Awake()
     {
-        PickupColour = this.gameObject.GetComponent<Renderer>();
-
->>>>>>> Stashed changes
+        PickupColour = this.gameObject.GetComponent<Material>();
         data = GetComponent<WeaponData>();
+
+        SelectPickupType();
 
         if (data == null)
         {
@@ -27,37 +33,27 @@ public class PickUps : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
-=======
-    void SelectPickupType()
+    private void Update()
     {
-        int choice = Random.Range(0, 1);
+        //transform.Rotate(rotationSpeed * Time.deltaTime, rotationSpeed * Time.deltaTime, rotationSpeed * Time.deltaTime);
+    }
+
+    private void SelectPickupType()
+    {
+        int choice = Random.Range(0, 2);
         switch (choice)
         {
             case 0:
-                {
-                    this.gameObject.tag = "HealthPickup";
-                    PickupColour.material.SetColor("_BaseColor", Color.green);
-                    // Change model
-                    break;
-                }
-
+                this.gameObject.tag = "HealthPickup";
+                PickupColour.SetColor("_Color", Color.green);
+                break;
+                
             case 1:
-                {
-                    this.gameObject.tag = "WeaponPickup";
-                    PickupColour.material.SetColor("_BaseColor", Color.gray);
-                    // Change model
-                    break;
-                }
-            default:
-                {
-                    this.gameObject.tag = "HealthPickup";
-                    PickupColour.material.SetColor("_BaseColor", Color.green);
-                    break;
-                }
+                this.gameObject.tag = "WeaponPickup";
+                PickupColour.SetColor("_Color", Color.gray);
+                break;
         }
     }
->>>>>>> Stashed changes
 
     private void OnTriggerEnter(Collider other)
     {
@@ -68,23 +64,32 @@ public class PickUps : MonoBehaviour
         Debug.Log("Player collided with pickup!");
 
         // Get the current weapon base from the pickup
+        if (this.gameObject.CompareTag("HealthPickup"))
+        {
+            // Add health pickup
+            Health objectHealth = other.GetComponentInChildren<Health>();
 
-<<<<<<< Updated upstream
         WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
-=======
-            Debug.Log("Player health obtained");
-            objectHealth.TakeDamage(-30);
-            Debug.Log("Player Health: " + objectHealth.currentHealth);
-        }
->>>>>>> Stashed changes
 
         if (currentWeapon == null)
         {
-<<<<<<< Updated upstream
             Debug.LogError("Could not find player's WeaponBase!");
             return;
         }
-=======
+            if (objectHealth == null)
+            {
+                Debug.LogError("Could not find player's health!");
+                return;
+            }
+
+            Debug.Log("Player health obtained");
+
+            objectHealth.TakeDamage(-30);
+        }
+
+        // Get the weapon data from the enemy and apply it to the player's current weapon
+        if (data != null)
+        {
             WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
 
             if (currentWeapon == null)
@@ -93,8 +98,11 @@ public class PickUps : MonoBehaviour
                 return;
             }
 
-            Loadout playerLoadout = other.GetComponentInChildren<Loadout>();
+            Loadout playerLoadout = other.GetComponent<Loadout>();
 
+        currentWeapon.CancelQTE();
+        //Destroy
+        Destroy(gameObject);
             if (playerLoadout == null)
             {
                 Debug.LogError("Could not find player's Loadout!");
@@ -116,30 +124,12 @@ public class PickUps : MonoBehaviour
 
                 // immediately equip
                 data.SetData(currentWeapon);
->>>>>>> Stashed changes
 
-        Debug.Log("Player weapon obtained!");
-
-<<<<<<< Updated upstream
-        // Get the weapon data from the enemy and apply it to the player's current weapon
-        if (data != null)
-        {
-            currentWeapon.CancelQTE();
-            data.SetData(currentWeapon);
-            Debug.Log("Weapon data applied to player's current weapon");
-            //currentWeapon.Reload();
-        }
-
-        currentWeapon.CancelQTE();
-=======
-            if (playerLoadout.PrimaryWeaponData != null || playerLoadout.SecondaryWeaponData != null)
-            {
-                return;
+                Debug.Log("Overwrote primary weapon");
             }
-        }
 
->>>>>>> Stashed changes
-        //Destroy
-        Destroy(gameObject);
+            //Destroy
+            Destroy(gameObject);
+        }
     }
 }
