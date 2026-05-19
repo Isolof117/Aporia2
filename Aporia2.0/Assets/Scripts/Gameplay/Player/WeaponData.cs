@@ -10,14 +10,14 @@ public class WeaponData : MonoBehaviour
 
     WeaponBase.ShootingMode weaponMode;
 
-    public void GetData(WeaponBase currentWeapon)
+    public void GetData(WeaponBase currentEnemyWeapon)
     {
-        bulletVelocity = currentWeapon.bulletVelocity;
-        bulletSpread = currentWeapon.bulletSpread;
-        fireRate = currentWeapon.fireRate;
-        magazineSize = currentWeapon.magazineSize;
-        bulletsLeft = currentWeapon.bulletsLeft;
-        weaponMode = currentWeapon.currentMode;
+        bulletVelocity = currentEnemyWeapon.bulletVelocity;
+        bulletSpread = currentEnemyWeapon.bulletSpread;
+        fireRate = currentEnemyWeapon.fireRate;
+        magazineSize = currentEnemyWeapon.magazineSize;
+        bulletsLeft = currentEnemyWeapon.bulletsLeft;
+        weaponMode = currentEnemyWeapon.currentMode;
     }
 
     public void SetData(WeaponBase newWeapon)
@@ -27,7 +27,7 @@ public class WeaponData : MonoBehaviour
         bulletsPerBurst = Mathf.Max(1, bulletsPerBurst);
 
         newWeapon.bulletVelocity = bulletVelocity;
-        newWeapon.bulletSpread = 0;
+        newWeapon.bulletSpread = bulletSpread;
         newWeapon.fireRate = fireRate;
         newWeapon.magazineSize = magazineSize;
         newWeapon.bulletsLeft = Mathf.Clamp(bulletsLeft, 0, magazineSize);
@@ -39,15 +39,5 @@ public class WeaponData : MonoBehaviour
         }
 
         newWeapon.ResetProperties();
-    }
-   
-
-    public void PistolData()
-    {
-        fireRate = 0.8f;
-        magazineSize = 20;
-        bulletVelocity = 30;
-        bulletsLeft = magazineSize;
-        weaponMode = WeaponBase.ShootingMode.Single;
     }
 }
