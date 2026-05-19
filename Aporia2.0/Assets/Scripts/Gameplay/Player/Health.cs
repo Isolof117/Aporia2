@@ -10,7 +10,6 @@ public class Health : MonoBehaviour
     [SerializeField] public int currentHealth;
 
     [SerializeField] private Slider healthSlider;
-    [SerializeField] private Canvas canvas;
 
     //Events
 
