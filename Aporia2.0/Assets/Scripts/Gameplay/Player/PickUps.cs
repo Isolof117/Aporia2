@@ -6,12 +6,16 @@ public class PickUps : MonoBehaviour
 {
     // Weapon data from enemy
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
+=======
+>>>>>>> parent of b2b968b (Fixed Loadout / Pickups)
     private WeaponData data;
 
     private void Awake()
     {
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 1e8ce25 (Merge branch 'main' into JJBranch)
     public WeaponData data;
@@ -28,6 +32,8 @@ public class PickUps : MonoBehaviour
 >>>>>>> parent of 1e8ce25 (Merge branch 'main' into JJBranch)
 
 >>>>>>> Stashed changes
+=======
+>>>>>>> parent of b2b968b (Fixed Loadout / Pickups)
         data = GetComponent<WeaponData>();
 
         if (data == null)
@@ -36,37 +42,6 @@ public class PickUps : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
-=======
-    void SelectPickupType()
-    {
-        int choice = Random.Range(0, 1);
-        switch (choice)
-        {
-            case 0:
-                {
-                    this.gameObject.tag = "HealthPickup";
-                    PickupColour.material.SetColor("_BaseColor", Color.green);
-                    // Change model
-                    break;
-                }
-
-            case 1:
-                {
-                    this.gameObject.tag = "WeaponPickup";
-                    PickupColour.material.SetColor("_BaseColor", Color.gray);
-                    // Change model
-                    break;
-                }
-            default:
-                {
-                    this.gameObject.tag = "HealthPickup";
-                    PickupColour.material.SetColor("_BaseColor", Color.green);
-                    break;
-                }
-        }
-    }
->>>>>>> Stashed changes
 
     private void OnTriggerEnter(Collider other)
     {
@@ -78,6 +53,7 @@ public class PickUps : MonoBehaviour
 
         // Get the current weapon base from the pickup
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             if (objectHealth == null)
             {
@@ -94,20 +70,16 @@ public class PickUps : MonoBehaviour
         {
 =======
 <<<<<<< Updated upstream
-        WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
 =======
-            Debug.Log("Player health obtained");
-            objectHealth.TakeDamage(-30);
-            Debug.Log("Player Health: " + objectHealth.currentHealth);
-        }
->>>>>>> Stashed changes
+>>>>>>> parent of b2b968b (Fixed Loadout / Pickups)
+        WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
 
         if (currentWeapon == null)
         {
-<<<<<<< Updated upstream
             Debug.LogError("Could not find player's WeaponBase!");
             return;
         }
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 1e8ce25 (Merge branch 'main' into JJBranch)
             WeaponBase currentWeapon = other.GetComponentInChildren<WeaponBase>();
@@ -142,10 +114,11 @@ public class PickUps : MonoBehaviour
                 // immediately equip
                 data.SetData(currentWeapon);
 >>>>>>> Stashed changes
+=======
+>>>>>>> parent of b2b968b (Fixed Loadout / Pickups)
 
         Debug.Log("Player weapon obtained!");
 
-<<<<<<< Updated upstream
         // Get the weapon data from the enemy and apply it to the player's current weapon
         if (data != null)
         {
@@ -156,14 +129,6 @@ public class PickUps : MonoBehaviour
         }
 
         currentWeapon.CancelQTE();
-=======
-            if (playerLoadout.PrimaryWeaponData != null || playerLoadout.SecondaryWeaponData != null)
-            {
-                return;
-            }
-        }
-
->>>>>>> Stashed changes
         //Destroy
         Destroy(gameObject);
     }
